@@ -27,7 +27,8 @@ from matplotlib.dates import MonthLocator
 data = pd.read_excel('usabled_days.xls').fillna(0)
 #设置预测时间
 forecast_start_date = '2018-01-03';
-forecast_end_date = '2018-12-01';
+#forecast_end_date = '2018-12-01';
+forecast_end_date = '2018-01-31';
 forecast_typ = 'linear';
 #设置图形大小
 fig_size = (10,5)
@@ -61,7 +62,8 @@ data_analysis = data['cpu_usabled'];
 
 #================绘制时序图,原始数据图形展现===================
 #data.plot() 
-data.plot(figsize = fig_size ) #设置图片显示大小
+#data.plot(figsize = fig_size ) #设置图片显示大小
+data_analysis.plot(figsize = fig_size ) #设置图片显示大小
 
 # 设置X轴的坐标刻度线显示间隔
 #plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))

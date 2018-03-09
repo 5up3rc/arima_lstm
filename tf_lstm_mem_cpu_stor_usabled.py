@@ -37,9 +37,9 @@ df = pd.read_excel(f)     #读入集群的历史性能数据
 #print(df)
 #data = df.loc[:,['cpu_usabled','record_time']].values  #读取需要计算的数据
 #data = df.loc[:,['cpu_usabled']].values  #读取需要计算的数据
-#data = np.array(df['cpu_usabled'])   #获取cpu的性能数据
+data = np.array(df['cpu_usabled'])   #获取cpu的性能数据
 #data = np.array(df['mem_usabled'])   #获取mem的性能数据
-data = np.array(df['stor_usabled'])   #获取存储的性能数据
+#data = np.array(df['stor_usabled'])   #获取存储的性能数据
 #data = data[::-1]      #反转，使数据按照日期先后顺序排列
 #print(data)
 
@@ -57,6 +57,14 @@ plt.show()
 '''
 定义常用的变量信息
 '''
+
+data_len = len(data)
+data_test_len = 20
+data_train_len = data_len - data_test_len
+test_y = data[data_train_len:]
+
+data = data[:data_train_len]
+
 std = np.std(data)
 mean = np.mean(data)
 normalize_data = (data - mean)/ std      #标准化
@@ -72,10 +80,8 @@ lr              = 0.0006                                #学习率
 train_x,train_y = [],[]                                 #训练集
 train_count     = 300                                   #训练次数
 train_model_step     = 20                               #模型保存间隔
-prediction_count      = 100                             #预测数据
-#data_len = len(data)
-#data_test_len = 20
-#data_train_len = data_len - data_test_len
+prediction_count      = 30                             #预测数据
+
 ##################################################################################################
 
 
@@ -153,7 +159,8 @@ def train_lstm():
                 start+=batch_size
                 end=start+batch_size
                 #每train_model_count步保存一次参数
-                if step % train_model_step == 0:
+                #print(step%train_model_step)
+                if step%train_model_step==0:
                     print(i,step,loss_)
                     print("保存模型：",saver.save(sess,'model/sunld.model'))
                 step+=1
@@ -183,11 +190,14 @@ def prediction():
         #print(predict)
         normalize_data1 = np.array(normalize_data) * std + mean;
         predict1 = np.array(predict) * std + mean;
+        acc = np.average(np.abs(predict1-test_y[:len(predict1)])/test_y[:len(predict1)])  #偏差
+        print(acc)
         #print(predict1)
         #以折线图表示结果
         plt.figure()
         plt.plot(list(range(len(normalize_data))), normalize_data1, color='b')
         plt.plot(list(range(len(normalize_data), len(normalize_data) + len(predict))), predict1, color='r')
+        plt.plot(list(range(len(normalize_data), len(normalize_data) + len(test_y))), test_y, color='y')
         plt.show()
         return predict1
 
