@@ -387,8 +387,8 @@ print("======================预计值========================")
 print(predict_dta)
 print("======================预计值========================")
 
-abs_= (predict_dta[0] - data_obligate['mem_usabled']).abs()
+abs_= (predict_dta[0] - data_obligate['cpu_usabled']).abs()
 mae_=abs_.mean()#平均绝对误差
 rmse_=((abs_**2).mean())**0.5#均方根误差
-mape_=(abs_ / data_obligate['mem_usabled']).mean()#平均绝对百分误差
+mape_=(abs_ / data_obligate['cpu_usabled']).mean()#平均绝对百分误差
 print (u'平均绝对误差:%0.4f,\n均方根误差为:%0.4f,\n平均绝对百分误差:%0.6f'%(mae_,rmse_,mape_))
